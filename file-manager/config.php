@@ -21,21 +21,14 @@ $use_auth = true;
 // Generate secure password hash - https://tinyfilemanager.github.io/docs/pwd.html
 $auth_users = array(
     // 'admin' => '$2y$10$/K.hjNr84lLNDt8fTXjoI.DBp6PpeyoJ.mGwrrLuCZfAwfSAGqhOW', //admin@123
-    'user' => '$2y$10$Fg6Dz8oH9fPoZ2jJan5tZuv6Z4Kp7avtQ9bDfrdRntXtPeiMAZyGO', //12345
-    'admin' => password_hash('12345', PASSWORD_DEFAULT),
-    'test' => password_hash('12345', PASSWORD_DEFAULT)
+    // 'user' => '$2y$10$Fg6Dz8oH9fPoZ2jJan5tZuv6Z4Kp7avtQ9bDfrdRntXtPeiMAZyGO', //12345
 );
 
 // Readonly users
 // e.g. array('users', 'guest', ...)
-$readonly_users = array(
-    'user',
-    'test'
-);
+$readonly_users = array();
 
-$upload_users = array(
-    'test'
-);
+$upload_users = array();
 
 // Enable highlight.js (https://highlightjs.org/) on view's page
 $use_highlightjs = true;
@@ -67,11 +60,31 @@ $http_host = $_SERVER['HTTP_HOST'];
 
 // user specific directories
 // array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
-$directories_users = array(
-    'user' => $hydroplan_root . '/user-folder',
-    'test' => $hydroplan_root . '/test2',
-    'admin' => $hydroplan_root
-);
+$directories_users = array();
+
+$credentials_file = fopen('user-credentials.txt', 'r');
+
+while($line = fgets($credentials_file)) {
+    $columns = explode(' ', $line);
+    $columns = array_map(function ($column) {
+        return preg_replace('/\s+/', '', $column);
+    }, $columns);
+
+    $auth_users[$columns[0]] = password_hash($columns[1], PASSWORD_DEFAULT);
+
+    if($columns[3] == '/')
+        $directories_users[$columns[0]] = $hydroplan_root;
+    else 
+    {
+        fm_mkdir($hydroplan_root . '/' . $columns[3], false);
+        $directories_users[$columns[0]] = $hydroplan_root . '/' . $columns[3];
+    }
+
+    if($columns[2] != 'admin') array_push($readonly_users, $columns[0]);
+    if($columns[2] == 'upload') array_push($upload_users, $columns[0]);
+}
+
+fclose($credentials_file);
 
 // input encoding for iconv
 $iconv_input_encoding = 'UTF-8';

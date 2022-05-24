@@ -666,7 +666,7 @@ if (isset($_GET['del']) && !FM_READONLY) {
 }
 
 // Create folder
-if (isset($_GET['new']) && isset($_GET['type']) && !FM_READONLY) {
+if (isset($_GET['new']) && isset($_GET['type']) && (!FM_READONLY || FM_UPLOADONLY)) {
     $type = $_GET['type'];
     $new = str_replace( '/', '', fm_clean_path( strip_tags( $_GET['new'] ) ) );
     if (fm_isvalid_filename($new) && $new != '' && $new != '..' && $new != '.') {
@@ -1422,6 +1422,7 @@ if (isset($_GET['settings']) && !FM_READONLY) {
     global $cfg, $lang, $lang_list;
     ?>
 
+
     <div class="col-md-8 offset-md-2 pt-3">
         <div class="card mb-2 <?php echo fm_get_theme(); ?>">
             <h6 class="card-header">
@@ -1524,7 +1525,24 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                             </select>
                         </div>
                     </div>
-
+                    <div>
+                        <label for="user">Username: </label>
+                        <input type="text" id="user" name="user">
+                        <br>
+                        <label for="password">Username: </label>
+                        <input type="password" id="password" name="password">
+                        <br>
+                        <label for="permission">User type:</label>
+                        <select id="permission">
+                            <option value="admin">Admin</option>
+                            <option value="upload">User with upload</option>
+                            <option value="read">User without upload</option>
+                        </select>
+                        <br>
+                        <label for="user">Username: </label>
+                        <input type="text" id="user" name="user">
+                        <br>
+                    </div>
                     <div class="form-group row">
                         <div class="col-sm-10">
                             <button type="submit" class="btn btn-success"> <i class="fa fa-check-circle"></i> <?php echo lng('Save'); ?></button>
@@ -3450,11 +3468,9 @@ function fm_show_nav_path($path)
                     <li class="nav-item">
                         <a title="<?php echo lng('Upload') ?>" class="nav-link" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;upload"><i class="fa fa-cloud-upload" aria-hidden="true"></i> <?php echo lng('Upload') ?></a>
                     </li>
-                        <?php if (!FM_READONLY): ?>
-                            <li class="nav-item">
-                                <a title="<?php echo lng('NewItem') ?>" class="nav-link" href="#createNewItem" data-toggle="modal" data-target="#createNewItem"><i class="fa fa-plus-square"></i> <?php echo lng('NewItem') ?></a>
-                            </li>
-                        <?php endif; ?>
+                    <li class="nav-item">
+                        <a title="<?php echo lng('NewItem') ?>" class="nav-link" href="#createNewItem" data-toggle="modal" data-target="#createNewItem"><i class="fa fa-plus-square"></i> <?php echo lng('NewItem') ?></a>
+                    </li>
                     <?php endif; ?>
                     <?php if (FM_USE_AUTH): ?>
                     <li class="nav-item avatar dropdown">
@@ -3906,9 +3922,10 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     //Save Settings
     function save_settings($this) {
         let form = $($this);
+        console.log(form.attr('action'));
         $.ajax({
-            type: form.attr('method'), url: form.attr('action'), data: form.serialize()+"&ajax="+true,
-            success: function (data) {if(data) { window.location.reload();}}
+            type: form.attr('method'), url: form.attr('action'), data: form.serialize()+"&ajax="+true
+            // success: function (data) {if(data) { window.location.reload();}}
         }); return false;
     }
     //Create new password hash
