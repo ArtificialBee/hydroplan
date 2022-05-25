@@ -1525,24 +1525,7 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                             </select>
                         </div>
                     </div>
-                    <div>
-                        <label for="user">Username: </label>
-                        <input type="text" id="user" name="user">
-                        <br>
-                        <label for="password">Username: </label>
-                        <input type="password" id="password" name="password">
-                        <br>
-                        <label for="permission">User type:</label>
-                        <select id="permission">
-                            <option value="admin">Admin</option>
-                            <option value="upload">User with upload</option>
-                            <option value="read">User without upload</option>
-                        </select>
-                        <br>
-                        <label for="user">Username: </label>
-                        <input type="text" id="user" name="user">
-                        <br>
-                    </div>
+                    
                     <div class="form-group row">
                         <div class="col-sm-10">
                             <button type="submit" class="btn btn-success"> <i class="fa fa-check-circle"></i> <?php echo lng('Save'); ?></button>
@@ -1550,6 +1533,77 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                     </div>
 
                 </form>
+                <h3>Adding new user: </h3>
+                <form method="post" action="add-new-user.php">
+                <script>
+                        function togglePassword() {
+                        var x = document.getElementById("password");
+                        if (x.type === "password") {
+                            x.type = "text";
+                        } else {
+                            x.type = "password";
+                        }
+                        }
+
+                    </script>
+                    <div>
+                        <label for="user">Username: </label>
+                        <input type="text" id="user" name="user" autocomplete="off" value="">
+                        <br>
+                        <label for="password">Password: </label>
+                        <input type="password" id="password" name="password">
+                        <input type="checkbox" onclick="togglePassword()">Show Password
+                        <br>
+                        <label for="permission">User type:</label>
+                        <select id="permission" name="permission">
+                            <option value="admin">Admin</option>
+                            <option value="upload">User with upload</option>
+                            <option value="read">User without upload</option>
+                        </select>
+                        <br>
+                        <label for="user-folder">User folder: </label>
+                        <input type="text" id="user-folder" name="user-folder" value="/">
+                        <br>
+                    </div>
+                    <label>Submit</label>
+                    <input type="submit" id="submit">
+                </form>
+                <script>
+                    function test(event){
+                        const user = document.getElementById('user').value;
+                        // const user="admin"
+                        const password = document.getElementById('password').value;
+                        // const password = "admin"
+                        const permission = document.getElementById('permission').value;
+                        // const permission = "Edvin"
+                        let folder = document.getElementById('user-folder');
+                        if(!folder.value){
+                            folder = 'blablalba';
+                        } else folder = folder.value;
+                        // const folder = "Sacic"
+                        console.log(permission);
+                        console.log(folder);
+                        fetch('http://localhost/hydroplan/file-manager/add-new-user.php',{
+                            method:'POST',
+                            headers:{
+                                "Content-Type": "application/json"
+                            },
+                            // body:`user=${user}&password=${password}&permission=${permission}&folder=${folder}`,
+                            body:{
+                                user:user,
+                                password:password,
+                                perm:permission,
+                                folder:folder
+                            }
+                        })
+                        .then(res=>{
+                            res.text();
+                        })
+                        .then(res=>{
+                            // console.log(res);
+                        })
+                    }
+                </script>
             </div>
         </div>
     </div>
@@ -3920,9 +3974,25 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     }
     function show_new_pwd() { $(".js-new-pwd").toggleClass('hidden'); }
     //Save Settings
+
+    var fs = require('fs');
+
     function save_settings($this) {
         let form = $($this);
-        console.log(form.attr('action'));
+        const username = document.getElementById("user");
+        const password = document.getElementById("password");
+        const permission = document.getElementById("permission");
+        const user_folder = document.getElementById("user-folder");
+        console.log(username.value);
+        console.log(password.value);
+        console.log(permission.value);
+        console.log(user_folder.value);
+        fs.readFile('user-credentials.txt',function(){
+            console.log("AAAAAAAAAAAAAAAa");
+        })
+        if(username && password && permission){
+
+        }
         $.ajax({
             type: form.attr('method'), url: form.attr('action'), data: form.serialize()+"&ajax="+true
             // success: function (data) {if(data) { window.location.reload();}}
@@ -4172,3 +4242,5 @@ function lng($txt) {
 }
 
 ?>
+
+
