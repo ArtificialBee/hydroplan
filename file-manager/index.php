@@ -1533,7 +1533,7 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                     </div>
 
                 </form>
-                <h3>Adding new user: </h3>
+                <h3 class="mt-5">Adding new user: </h3>
                 <form method="post" action="add-new-user.php">
                 <script>
                         function togglePassword() {
@@ -1546,27 +1546,26 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                         }
 
                     </script>
-                    <div>
+                    <div class="form-group">
                         <label for="user">Username: </label>
-                        <input type="text" id="user" name="user" autocomplete="off" value="">
+                        <input type="text" class="form-control" id="user" name="user" autocomplete="off" value="">
                         <br>
                         <label for="password">Password: </label>
-                        <input type="password" id="password" name="password">
-                        <input type="checkbox" onclick="togglePassword()">Show Password
+                        <input type="password" class="form-control" id="password" name="password">
+                        <input type="checkbox" class="mt-2" onclick="togglePassword()">Show Password
                         <br>
-                        <label for="permission">User type:</label>
-                        <select id="permission" name="permission">
+                        <label class="mt-4" for="permission">User type:</label>
+                        <select id="permission" class="custom-select" name="permission">
                             <option value="admin">Admin</option>
                             <option value="upload">User with upload</option>
                             <option value="read">User without upload</option>
                         </select>
                         <br>
-                        <label for="user-folder">User folder: </label>
-                        <input type="text" id="user-folder" name="user-folder" value="/">
+                        <label class="mt-4" for="user-folder">User folder: </label>
+                        <input type="text" class="form-control" id="user-folder" name="user-folder" value="/">
                         <br>
                     </div>
-                    <label>Submit</label>
-                    <input type="submit" id="submit">
+                    <input value="Add user" class="btn btn-dark" type="submit" id="submit">
                 </form>
                 <script>
                     function test(event){
