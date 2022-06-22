@@ -1,6 +1,6 @@
 <?php
 //Default Configuration
-$CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false,"hide_Cols":false,"calc_folder":false,"theme":"light"}';
+$CONFIG = '{"lang":"en","error_reporting":true,"show_hidden":true,"hide_Cols":true,"calc_folder":true,"theme":"light"}';
 
 
 /**
@@ -1577,17 +1577,15 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                         // const permission = "Edvin"
                         let folder = document.getElementById('user-folder');
                         if(!folder.value){
-                            folder = 'blablalba';
+                            folder = '/';
                         } else folder = folder.value;
                         // const folder = "Sacic"
-                        console.log(permission);
-                        console.log(folder);
+
                         fetch('http://localhost/hydroplan/file-manager/add-new-user.php',{
                             method:'POST',
                             headers:{
                                 "Content-Type": "application/json"
                             },
-                            // body:`user=${user}&password=${password}&permission=${permission}&folder=${folder}`,
                             body:{
                                 user:user,
                                 password:password,
@@ -1599,7 +1597,6 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                             res.text();
                         })
                         .then(res=>{
-                            // console.log(res);
                         })
                     }
                 </script>
@@ -3974,27 +3971,11 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     function show_new_pwd() { $(".js-new-pwd").toggleClass('hidden'); }
     //Save Settings
 
-    var fs = require('fs');
-
     function save_settings($this) {
         let form = $($this);
-        const username = document.getElementById("user");
-        const password = document.getElementById("password");
-        const permission = document.getElementById("permission");
-        const user_folder = document.getElementById("user-folder");
-        console.log(username.value);
-        console.log(password.value);
-        console.log(permission.value);
-        console.log(user_folder.value);
-        fs.readFile('user-credentials.txt',function(){
-            console.log("AAAAAAAAAAAAAAAa");
-        })
-        if(username && password && permission){
-
-        }
         $.ajax({
-            type: form.attr('method'), url: form.attr('action'), data: form.serialize()+"&ajax="+true
-            // success: function (data) {if(data) { window.location.reload();}}
+            type: form.attr('method'), url: form.attr('action'), data: form.serialize()+"&ajax="+true,
+            success: function (data) {if(data) { window.location.reload();}}
         }); return false;
     }
     //Create new password hash

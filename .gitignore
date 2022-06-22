@@ -1,1 +1,3 @@
 /wp-config.php
+*.wpress
+/wp-content/backups-dup-lite/*
