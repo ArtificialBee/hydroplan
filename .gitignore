@@ -1,3 +1,7 @@
 /wp-config.php
+<<<<<<< HEAD
 *.wpress
 /wp-content/backups-dup-lite/*
+=======
+*.wpress
+>>>>>>> 3e8f9cbd4a40cea66d827d15d710526bfd87f3d9
